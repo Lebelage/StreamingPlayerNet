@@ -1,0 +1,81 @@
+﻿<Window x:Class="StreamingPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:StreamingPlayer.Views.Controls"
+        xmlns:local="clr-namespace:StreamingPlayer"
+        mc:Ignorable="d"
+        DataContext="{Binding MainWindowVM, Source={StaticResource VMLocator}}"
+        Title="MainWindow" Height="450" Width="800"
+        WindowStyle="SingleBorderWindow" ResizeMode="CanResize">
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="7" UseAeroCaptionButtons="False" GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+    <Window.Template>
+        <ControlTemplate TargetType="{x:Type Window}">
+            <Border x:Name="border" Background="{StaticResource brush_MainBackground}" BorderBrush="{StaticResource brush_MainBorder}" BorderThickness="7" SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0">
+                        <Grid DockPanel.Dock="Left" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                        <Button Grid.Column="0" Content="Select file" Command="{Binding OpenFileDialogCommand}" Style="{StaticResource button_CommonRounded}" Padding="5, 0" WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Left"/>
+                        <Button Grid.Column="1" Content="Settings"  Style="{StaticResource button_CommonRounded}" Padding="5, 0" WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Left"/>
+                        <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Background="{TemplateBinding Background}" Focusable="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Style="{StaticResource button_HideWindowRactangle}" Command="{StaticResource HideWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" />
+                            <Button Grid.Column="1" x:Name="maximizeWindow" Style="{StaticResource button_MaximizeWindowRactangle}" Command="{StaticResource MaximizeWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" />
+                            <Button Grid.Column="1" x:Name="normalizeWindow" Style="{StaticResource button_NormalizeWindowRactangle}" Command="{StaticResource NormalizeWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" />
+                            <Button Grid.Column="2" Style="{StaticResource button_CloseWindowRactangle}" Command="{StaticResource CloseWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" />
+                        </Grid>
+
+                        <UniformGrid Columns="1" Rows="1" Background="{Binding Background, ElementName=border}">
+                            <TextBlock Style="{StaticResource textBlock_MainTitle}" Text="Streaming player"/>
+                        </UniformGrid>
+                    </DockPanel>
+                    <Border Grid.Row="1" BorderBrush="{StaticResource brush_MainBackground}" BorderThickness="1" SnapsToDevicePixels="True">
+                        <AdornerDecorator>
+                            <ContentPresenter />
+                        </AdornerDecorator>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="WindowState" Value="Normal">
+                    <Setter TargetName="border" Property="BorderThickness" Value="1" />
+                    <Setter TargetName="maximizeWindow" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="normalizeWindow" Property="Visibility" Value="Hidden"/>
+                </Trigger>
+                <Trigger Property="WindowState" Value="Maximized">
+                    <Setter TargetName="maximizeWindow" Property="Visibility" Value="Hidden"/>
+                    <Setter TargetName="normalizeWindow" Property="Visibility" Value="Visible"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Template>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <controls:PlayerInfoControl Grid.Row="1"/>
+    </Grid>
+</Window>

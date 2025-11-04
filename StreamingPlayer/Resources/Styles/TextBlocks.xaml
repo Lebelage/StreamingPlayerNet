@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="textBlock_Common" TargetType="{x:Type TextBlock}">
+        <Setter Property="Background" Value="{StaticResource brush_MainBackground}"/>
+        <Setter Property="Foreground" Value="{StaticResource brush_MainForeground}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="textBlock_MainTitle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Background" Value="{StaticResource brush_MainBackground}"/>
+        <Setter Property="Foreground" Value="{StaticResource brush_MainForeground}"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Margin" Value="5, 3"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+    </Style>
+</ResourceDictionary>

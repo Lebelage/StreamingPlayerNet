@@ -74,8 +74,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
+        <controls:VlcPlayerControl Grid.Row="0"/>
         <controls:PlayerInfoControl Grid.Row="1"/>
     </Grid>
 </Window>

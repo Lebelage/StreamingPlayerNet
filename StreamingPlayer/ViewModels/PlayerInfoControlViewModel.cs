@@ -11,6 +11,16 @@ namespace StreamingPlayer.ViewModels
     {
         #region Fields
 
+        #region CurrentState : string
+        private string? _CurrentState = "10";
+        public string? CurrentState { get => _CurrentState; set => Set(ref _CurrentState, value); }
+        #endregion
+
+        #region CurrentSpeed : float
+        private float? _CurrentSpeed;
+        public float? CurrentSpeed { get => _CurrentSpeed; set => Set(ref _CurrentSpeed, value); }
+        #endregion
+
         #region SelectedFilePath : string
         private string? _SelectedFileName;
         public string? SelectedFileName { get => _SelectedFileName; set => Set(ref _SelectedFileName, value); }
@@ -26,6 +36,19 @@ namespace StreamingPlayer.ViewModels
         #endregion
 
         #region Handlers
+        private void OnTorrentStateChanged(object? sender, MonoTorrent.Client.TorrentStateChangedEventArgs? e)
+        {
+            CurrentState = e?.NewState.ToString();
+        }
+
+        private void OnDownloadSpeedChanged(object? sender, float? e)
+        {
+            if (e is null)
+                return;
+
+            CurrentSpeed = e;
+        }
+
         private void OnTorrentFileSelected(object? sender, string? e)
         {
             if (e is not null)
@@ -39,9 +62,10 @@ namespace StreamingPlayer.ViewModels
             eventNotification = App.Services.GetRequiredService<IEventNotification>();
 
             eventNotification.TorrentFileSelected += OnTorrentFileSelected;
-        }
 
-
+            App.TorrentCore.TorrentStateChanged += OnTorrentStateChanged;
+            App.TorrentCore.DownloadSpeedChanged += OnDownloadSpeedChanged;
+        }     
         #endregion
     }
 }

@@ -10,10 +10,24 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="Path: " VerticalAlignment="Center" Style="{StaticResource textBlock_Common}"/>
         <TextBlock Grid.Column="1" Text="{Binding SelectedFileName}" VerticalAlignment="Center" Style="{StaticResource textBlock_Common}"/>
+        
+        <StackPanel Grid.Column="3" VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock Text="Speed:"  Style="{StaticResource textBlock_Common}"/>
+            <TextBlock Text="{Binding CurrentSpeed}"  Style="{StaticResource textBlock_Common}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="4" VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock Text="Status:"  Style="{StaticResource textBlock_Common}"/>
+            <TextBlock Text="{Binding CurrentState}"  Style="{StaticResource textBlock_Common}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

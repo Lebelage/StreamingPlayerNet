@@ -6,6 +6,8 @@ namespace StreamingPlayer.ViewModels
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) => services
             .AddSingleton<MainWindowViewModel>()
-            .AddSingleton<PlayerInfoControlViewModel>();
+            .AddSingleton<PlayerInfoControlViewModel>()
+            .AddSingleton<VlcPlayerControlViewModel>()
+            ;
     }
 }

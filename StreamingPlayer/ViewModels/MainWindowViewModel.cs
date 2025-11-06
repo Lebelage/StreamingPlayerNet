@@ -28,6 +28,17 @@ namespace StreamingPlayer.ViewModels
         }
         #endregion
 
+
+        #region Handlers
+        private void OnTorrentFileSelected(object? sender, string? e)
+        {
+            if (e is null)
+                return;
+
+            App.TorrentCore.LoadTorrent(e, "C:/ProgramData");
+        }
+        #endregion
+
         #region Constructor
         public MainWindowViewModel() 
         {
@@ -35,8 +46,9 @@ namespace StreamingPlayer.ViewModels
             fileDialog = App.Services.GetRequiredService<IFileDialog>();
 
             OpenFileDialogCommand = new LambdaCommand(OnOpenFileDialogCommandExecuted, CanOpenFileDialogCommandExecute);
-        }
 
+            eventNotification.TorrentFileSelected += OnTorrentFileSelected;
+        }     
         #endregion
     }
 }

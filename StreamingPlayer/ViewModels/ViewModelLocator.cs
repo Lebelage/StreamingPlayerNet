@@ -7,5 +7,6 @@ namespace StreamingPlayer.ViewModels
     {
         public MainWindowViewModel MainWindowVM => App.Services.GetRequiredService<MainWindowViewModel>();
         public PlayerInfoControlViewModel PlayerInfoVM => App.Services.GetRequiredService<PlayerInfoControlViewModel>();
+        public VlcPlayerControlViewModel VlcPlayerVM => App.Services.GetRequiredService<VlcPlayerControlViewModel>();
     }
 }

@@ -26,6 +26,7 @@ namespace StreamingPlayer.Infrastructure.Commands.Base
         bool ICommand.CanExecute(object? parameter) =>
             _Executable && CanExecute(parameter);
 
+        //
         void ICommand.Execute(object? parameter)
         {
             if (CanExecute(parameter))

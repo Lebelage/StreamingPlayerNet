@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:StreamingPlayer.Infrastructure.Converters"
              xmlns:local="clr-namespace:StreamingPlayer.Views.Controls"         
              DataContext="{Binding PlayerInfoVM, Source={StaticResource VMLocator}}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:SpeedConverter x:Key="SpeedConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -18,11 +24,11 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="Path: " VerticalAlignment="Center" Style="{StaticResource textBlock_Common}"/>
-        <TextBlock Grid.Column="1" Text="{Binding SelectedFileName}" VerticalAlignment="Center" Style="{StaticResource textBlock_Common}"/>
+        <TextBlock Grid.Column="1" Text="{Binding SelectedFileName}" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource textBlock_Common}"/>
         
         <StackPanel Grid.Column="3" VerticalAlignment="Center" Orientation="Horizontal">
             <TextBlock Text="Speed:"  Style="{StaticResource textBlock_Common}"/>
-            <TextBlock Text="{Binding CurrentSpeed}"  Style="{StaticResource textBlock_Common}"/>
+            <TextBlock Text="{Binding CurrentSpeed, Converter={StaticResource SpeedConverter}}"  Style="{StaticResource textBlock_Common}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="4" VerticalAlignment="Center" Orientation="Horizontal">

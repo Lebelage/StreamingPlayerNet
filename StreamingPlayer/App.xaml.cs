@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StreamingPlayer.Core.TorrentEngine;
-using StreamingPlayer.Core.VlcPlayer;
+using StreamingPlayer.Core.VlcPalyer;
 using StreamingPlayer.Services;
 using StreamingPlayer.ViewModels;
 using System.Windows;
@@ -14,7 +14,7 @@ namespace StreamingPlayer
     public partial class App : Application
     {
         public static TorrentCore TorrentCore { get; private set; }
-        public static VlcPlayerCore VlcPlayerCore { get; private set; }
+        public static VLCPlayerCore VlcPlayerCore { get; private set; }
 
         public static Window? FocusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(window => window.IsFocused);
         public static Window? ActivedWindow => Current.Windows.Cast<Window>().FirstOrDefault(window => window.IsActive);
@@ -31,7 +31,7 @@ namespace StreamingPlayer
         protected override async void OnStartup(StartupEventArgs e)
         {
             TorrentCore = new TorrentCore();
-            VlcPlayerCore = new VlcPlayerCore();
+            VlcPlayerCore = new VLCPlayerCore();
 
             IHost host = Host;
             base.OnStartup(e);

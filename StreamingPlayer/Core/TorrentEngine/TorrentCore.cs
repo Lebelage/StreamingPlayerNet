@@ -1,5 +1,7 @@
 ﻿using MonoTorrent;
 using MonoTorrent.Client;
+using System.IO;
+using System.Reflection;
 
 namespace StreamingPlayer.Core.TorrentEngine
 {
@@ -16,56 +18,57 @@ namespace StreamingPlayer.Core.TorrentEngine
         private TorrentManager _Manager;
         private string _DownloadPath;
 
+
         private bool _disposed = false;
 
         private Task _InfoCollectionTask;
+        private Task _UpdatePriorityTask;
         private CancellationTokenSource _CancellationTokenSource;
+
+        public Stream _Stream { get; private set; }
         #endregion
 
         #region Methods
         public async Task LoadTorrent(string torrentFilePath, string downloadDirectory)
         {
-            _DownloadPath = torrentFilePath;
+            try
+            {
+                _Stream?.Dispose();
 
-            var torrent = await Torrent.LoadAsync(torrentFilePath);
-            _Manager = await _Engine.AddAsync(torrent, downloadDirectory);
+                _DownloadPath = torrentFilePath;
 
-            _Manager.TorrentStateChanged += (s, e) => TorrentStateChanged?.Invoke(this, e);
+                var torrent = await Torrent.LoadAsync(torrentFilePath);
 
-            // SetupSequentialDownload();
+                _Manager = await _Engine.AddStreamingAsync(torrent, downloadDirectory);
 
-            await _Manager.StartAsync();
+                var largestFile = _Manager.Files.OrderByDescending(t => t.Length).First();
+
+                _Manager.TorrentStateChanged += (s, e) => TorrentStateChanged?.Invoke(this, e);
+                
+                await _Manager.StartAsync();
+
+                var stream = await _Manager.StreamProvider.CreateStreamAsync(largestFile,true);
+
+                _Stream = new BufferedStream(stream);
+               
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
-        //private void SetupSequentialDownload()
-        //{
-        //    if (_Manager == null) return;
 
-        //    // Получаем файлы в торренте
-        //    var files = _Manager.Torrent.Files;
-
-        //    // Сортируем файлы для последовательной загрузки
-        //    for (int i = 0; i < files.Count; i++)
-        //    {
-        //        // Высокий приоритет для первых файлов, низкий для остальных
-        //        var priority = i == 0 ? Priority.Immediate : Priority.Low;
-        //        _Manager.SetFilePriority(files[i], priority);
-        //    }
-
-        //    // Обработчик прогресса загрузки для динамического изменения приоритетов
-        //    _Manager.PieceHashed += OnPieceHashed;
-        //}
 
         private void InfoCollection(CancellationToken token, uint timeout = 2000)
         {
             Task.Run(() =>
             {
-
                 float lastState = 0;
 
                 while (!token.IsCancellationRequested)
                 {
-                    float newState = _Engine.TotalDownloadRate / 1024f;
+                    float newState = _Engine.TotalDownloadRate;
 
                     if (newState != lastState)
                     {
@@ -73,18 +76,41 @@ namespace StreamingPlayer.Core.TorrentEngine
 
                         DownloadSpeedChanged?.Invoke(this, newState);
                     }
-
                     Thread.Sleep((int)timeout);
                 }
-
             });
 
         }
         #endregion
 
+        #region Handlers
+        //private void OnPieceHashed(object? sender, PieceHashedEventArgs e)
+        //{
+        //    if (e.HashPassed)
+        //    {
+        //        int firstMissingPiece = FindFirstMissingPiece();
+        //        if (firstMissingPiece >= 0)
+        //        {
+        //            UpdatePiecePriorities(firstMissingPiece);
+        //        }
+        //    }
+        //}
+
+        //private void UpdatePiecePriorities(int startPiece)
+        //{
+        //    for (int i = 0; i < _Manager.Torrent.PieceCount; i++)
+        //    {
+        //        //_Manager.Se
+        //    }
+        //}
+
+        #endregion
+
 
         public TorrentCore()
         {
+            var a = new EngineSettings();
+            
             _Engine = new ClientEngine(new EngineSettings());
 
             _CancellationTokenSource = new CancellationTokenSource();

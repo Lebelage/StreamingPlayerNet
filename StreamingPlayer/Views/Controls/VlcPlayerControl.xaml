@@ -2,20 +2,32 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:StreamingPlayer.Views.Controls"
              xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
              DataContext="{Binding VlcPlayerVM, Source={StaticResource VMLocator}}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <vlc:VideoView MediaPlayer="{Binding Player}" Grid.Row="0"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Content="Play" Command="{Binding PlayVideoCommand}"/>
-        </StackPanel>
+        <Border Background="{StaticResource brush_MainBackground}" BorderBrush="{StaticResource brush_MainBorder}" BorderThickness="1" SnapsToDevicePixels="True">
+            <vlc:VideoView MediaPlayer="{Binding Player}" Grid.Row="0" HorizontalAlignment="Stretch" >
+            </vlc:VideoView>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                <Button Content="{Binding PlayerButtonName}" Style="{StaticResource button_PlayerButton}" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Command="{Binding SwitchPlayerStateCommand}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

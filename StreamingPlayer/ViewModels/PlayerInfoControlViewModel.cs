@@ -12,7 +12,7 @@ namespace StreamingPlayer.ViewModels
         #region Fields
 
         #region CurrentState : string
-        private string? _CurrentState = "10";
+        private string? _CurrentState;
         public string? CurrentState { get => _CurrentState; set => Set(ref _CurrentState, value); }
         #endregion
 

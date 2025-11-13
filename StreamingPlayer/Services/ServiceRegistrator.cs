@@ -13,6 +13,7 @@ namespace StreamingPlayer.Services
         public static IServiceCollection AddServices(this IServiceCollection services) => services
             .AddSingleton<IFileDialog, FileDialogService>()
             .AddSingleton<IEventNotification, EventDispatcherService>()
+            .AddSingleton<IPlayerService, PlayerService>()
             ;
     }
 }

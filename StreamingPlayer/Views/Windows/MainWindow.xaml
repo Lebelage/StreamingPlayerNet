@@ -30,7 +30,6 @@
                             </Grid.ColumnDefinitions>
                         </Grid>
                         <Button Grid.Column="0" Content="Select file" Command="{Binding OpenFileDialogCommand}" Style="{StaticResource button_CommonRounded}" Padding="5, 0" WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Left"/>
-                        <Button Grid.Column="1" Content="Settings"  Style="{StaticResource button_CommonRounded}" Padding="5, 0" WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Left"/>
                         <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Background="{TemplateBinding Background}" Focusable="False">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

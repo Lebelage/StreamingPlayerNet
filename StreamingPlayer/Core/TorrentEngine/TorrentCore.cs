@@ -14,18 +14,15 @@ namespace StreamingPlayer.Core.TorrentEngine
 
         #region Fields
         private readonly ClientEngine _Engine;
-
         private TorrentManager _Manager;
-        private string _DownloadPath;
-
-
-        private bool _disposed = false;
+        public Stream _Stream { get; private set; }
 
         private Task _InfoCollectionTask;
         private Task _UpdatePriorityTask;
         private CancellationTokenSource _CancellationTokenSource;
 
-        public Stream _Stream { get; private set; }
+
+        private bool _disposed = false;
         #endregion
 
         #region Methods
@@ -35,8 +32,6 @@ namespace StreamingPlayer.Core.TorrentEngine
             {
                 _Stream?.Dispose();
 
-                _DownloadPath = torrentFilePath;
-
                 var torrent = await Torrent.LoadAsync(torrentFilePath);
 
                 _Manager = await _Engine.AddStreamingAsync(torrent, downloadDirectory);
@@ -44,21 +39,19 @@ namespace StreamingPlayer.Core.TorrentEngine
                 var largestFile = _Manager.Files.OrderByDescending(t => t.Length).First();
 
                 _Manager.TorrentStateChanged += (s, e) => TorrentStateChanged?.Invoke(this, e);
-                
+
                 await _Manager.StartAsync();
 
-                var stream = await _Manager.StreamProvider.CreateStreamAsync(largestFile,true);
+                var stream = await _Manager.StreamProvider.CreateStreamAsync(largestFile, true);
 
                 _Stream = new BufferedStream(stream);
-               
+
             }
             catch (Exception ex)
             {
 
             }
         }
-
-
 
         private void InfoCollection(CancellationToken token, uint timeout = 2000)
         {
@@ -84,37 +77,22 @@ namespace StreamingPlayer.Core.TorrentEngine
         #endregion
 
         #region Handlers
-        //private void OnPieceHashed(object? sender, PieceHashedEventArgs e)
-        //{
-        //    if (e.HashPassed)
-        //    {
-        //        int firstMissingPiece = FindFirstMissingPiece();
-        //        if (firstMissingPiece >= 0)
-        //        {
-        //            UpdatePiecePriorities(firstMissingPiece);
-        //        }
-        //    }
-        //}
-
-        //private void UpdatePiecePriorities(int startPiece)
-        //{
-        //    for (int i = 0; i < _Manager.Torrent.PieceCount; i++)
-        //    {
-        //        //_Manager.Se
-        //    }
-        //}
-
         #endregion
 
 
         public TorrentCore()
         {
             var a = new EngineSettings();
-            
+
             _Engine = new ClientEngine(new EngineSettings());
 
             _CancellationTokenSource = new CancellationTokenSource();
             _InfoCollectionTask = Task.Run(() => InfoCollection(_CancellationTokenSource.Token), _CancellationTokenSource.Token);
+        }
+
+        ~TorrentCore()
+        {
+            Dispose(true);
         }
 
         #region Disposing
@@ -123,19 +101,44 @@ namespace StreamingPlayer.Core.TorrentEngine
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        private void CleanUp()
+        {
+            if (_Manager.Torrent == null)
+            {
+                return;
+            }
+
+            string savePath = _Manager.SavePath;
+            string rootName = _Manager.Torrent.Name;
+
+            string fullDownloadPath = Path.Combine(savePath, rootName);
+
+            if (Directory.Exists(fullDownloadPath))
+            {
+                Directory.Delete(fullDownloadPath, recursive: true);
+            }
+            else if (File.Exists(fullDownloadPath))
+            {
+                File.Delete(fullDownloadPath);
+            }
+        }
+
         public void Dispose(bool disposing)
         {
             if (_disposed)
                 return;
 
-            if (disposing)
-            {
-                _InfoCollectionTask?.Wait();
-                _InfoCollectionTask?.Dispose();
-                _CancellationTokenSource?.Dispose();
-                _Engine?.Dispose();
+            if (disposing) { }
 
-            }
+            _InfoCollectionTask?.Wait();
+            _InfoCollectionTask?.Dispose();
+            _CancellationTokenSource?.Dispose();
+            _Manager?.StopAsync();
+
+            CleanUp();
+
+            _Engine?.Dispose();
 
             _disposed = true;
         }

@@ -83,7 +83,6 @@ namespace StreamingPlayer.Core.TorrentEngine
         {
             int totalRead = 0;
 
-            ///log
             int fromBuffer = 0;
             int fromStream = 0;
 

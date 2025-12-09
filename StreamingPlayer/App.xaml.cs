@@ -46,9 +46,10 @@ namespace StreamingPlayer
         /// <param name="e"></param>
         protected override async void OnExit(ExitEventArgs e)
         {
+            TorrentCore?.Dispose();
+            VlcPlayerCore?.Dispose();
 
             base.OnExit(e);
-
             using (Host) await Host.StopAsync();
         }
     }

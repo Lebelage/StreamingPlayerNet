@@ -28,7 +28,6 @@ namespace StreamingPlayer.ViewModels
         }
         #endregion
 
-
         #region Handlers
         private void OnTorrentFileSelected(object? sender, string? e)
         {
@@ -48,7 +47,8 @@ namespace StreamingPlayer.ViewModels
             OpenFileDialogCommand = new LambdaCommand(OnOpenFileDialogCommandExecuted, CanOpenFileDialogCommandExecute);
 
             eventNotification.TorrentFileSelected += OnTorrentFileSelected;
-        }     
+        }
+
         #endregion
     }
 }
